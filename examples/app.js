@@ -45,11 +45,23 @@
         })
     }, '手机号已存在')
 
-    validator.path('username')._msg(function(err) {
+    validator.path('username').get(function() {
+        return document.getElementById('username').value.trim()
+    })
+
+    validator.path('username')._msg.set(function(err) {
+        var username = validator.schema.username
+
         if (err) {
-            // show err msg
+            $('#username').addClass('form-control-danger')
+            $('#username').parent().parent().addClass('has-danger')
+            $('#username').siblings('.form-control-feedback').text(username.msg)
         } else {
-            // show ok
+            // set success style
         }
+    }).reset(function() {
+            $('#username').removeClass('form-control-danger')
+            $('#username').parent().parent().removeClass('has-danger')
+            $('#username').siblings('.form-control-feedback').text('message')
     })
 })()

@@ -7,17 +7,22 @@ Validator.prototype.messages = function (messages) {
 }
 
 Validator.prototype.reset = function () {
+    var item
     var schema = this.schema
     var field, fields = Object.keys(schema)
     var prop, props = ['required', '_length', 'type', 'enum', 'equal']
 
     for (var i = 0; i < fields.length; i++) {
         field = fields[i] // field name
-        schema[field].err = true
+        item = schema[field]
 
-        if (schema[field].err) {
-            schema[field].msg = ''
-            schema[field].err = false
+        if (item.err) {
+            if (item._msg) {
+                item._msg.reset()
+            };
+
+            item.msg = ''
+            item.err = false
         };
     }
 }
@@ -28,17 +33,28 @@ Validator.prototype.path = function (field) {
 
     return {
         validate: function (fn, msg) {
-            item.stack = {handle: fn, msg: msg, field: field}
+            item.task = {handle: fn, msg: msg, field: field}
         },
         get: function(fn) { // get field value
             item.get = fn
         },
-        _msg: function(fn) { // set msg
-            // init fail success loading
-            item._msg = fn
-        },
-        reset: function(fn) {
-            item.reset = fn
+        _msg: {
+            set: function (fn) {
+                if (!item._msg) {
+                    item._msg = {}
+                };
+
+                item._msg.set = fn
+                return this
+            },
+            reset: function (fn) {
+                if (!item._msg) {
+                    item._msg = {}
+                };
+
+                item._msg.reset = fn
+                return this
+            }
         }
     }
 }
@@ -55,6 +71,7 @@ Validator.prototype.bind = function(id) {
 }
 
 Validator.prototype.check = function() {
+    var item
     var index = 0
     var schema = this.schema
     var messages = this.messages
@@ -63,15 +80,30 @@ Validator.prototype.check = function() {
 
     function handleError(field, type) {
         console.log(field, type)
-        schema[field].err = true
-        schema[field].msg = messages[field][type]
+        item = schema[field]
+        item.err = true
+        item.msg = messages[field][type]
+
+        showError(item)
+    }
+
+    function showError (item) {
+        if (item._msg && item.err) {
+            item._msg.set(1)
+        };
     }
 
     this.reset()
 
     for (var i = 0; i < fields.length; i++) {
         field = fields[i]
-        schema[field].value = document.getElementById(field).value.trim()
+        item = schema[field]
+
+        if (item.get) {
+            item.value = item.get()
+        } else {
+            item.value = document.getElementById(field).value.trim()
+        }
     };
 
     for (var i = 0; i < fields.length; i++) {
@@ -79,25 +111,28 @@ Validator.prototype.check = function() {
 
         for (var j = 0; j < props.length; j++) {
             prop = props[j]
-            var value = schema[field].value
+            item = schema[field]
+            value = item.value
 
-            if (schema[field].required && prop === 'required' && value === '') {
+            if (item.required && prop === 'required' && value === '') {
                 handleError(field, prop)
                 break
             };
 
-            if (schema[field]._length && prop === '_length') {
-                var length = schema[field][prop]
+            if (item._length && prop === '_length') {
+                var length = item[prop]
 
                 if (typeof(length) === 'object') {
                     if (length.max && value.length > length.max) {
-                        schema[field].err = true
-                        schema[field].msg =  messages[field]._length.max
+                        item.err = true
+                        item.msg =  messages[field]._length.max
+                        showError(item)
                         break
                     }
                     if (length.min && value.length < length.min) {
                         schema[field].err = true
                         schema[field].msg =  messages[field]._length.min
+                        showError(item)
                         break
                     }
                 } else if (value.length !== length) {
@@ -106,21 +141,20 @@ Validator.prototype.check = function() {
                 };
             };
 
-            if (schema[field].type && prop === 'type') {
-                var type = schema[field].type
+            if (item.type && prop === 'type') {
                 var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 
-                if (type === 'email' && !re.test(value)) {
+                if (item.type === 'email' && !re.test(value)) {
                     handleError(field, prop)
                     break
-                } else if (type === Number && !Number(value)) {
+                } else if (item.type === Number && !Number(value)) {
                     handleError(field, prop)
                     break
                 }
             };
 
-            if (schema[field].enum && prop === 'enum') {
-                var _enum = schema[field].enum
+            if (item.enum && prop === 'enum') {
+                var _enum = item.enum
 
                 if (!~_enum.indexOf(value)) {
                     handleError(field, prop)
@@ -128,8 +162,8 @@ Validator.prototype.check = function() {
                 };
             };
 
-            if (schema[field].equal && prop === 'equal') {
-                var equal = schema[field].equal
+            if (item.equal && prop === 'equal') {
+                var equal = item.equal
                 var other = schema[equal].value
 
                 if (value !== other) {
@@ -140,29 +174,30 @@ Validator.prototype.check = function() {
         };
     };
 
-    var item
-    var stack = []
+    var tasks = []
 
     for (var i = 0; i < fields.length; i++) {
         field = fields[i]
         item = schema[field]
 
-        if (!item.err && item.stack) {
-            stack.push(schema[field].stack)
+        if (!item.err && item.task) {
+            tasks.push(schema[field].task)
         };
     };
 
     function done(err, field) {
         var error = ''
+        item = schema[field]
 //        console.log(schema)
         index++
 //        console.log(index)
         if (err) {
-            schema[field].err = true
-            schema[field].msg = schema[field].stack.msg
+            item.err = true
+            item.msg = item.task.msg
+            showError(item)
         };
 
-        if (index === stack.length || stack.length === 0) {
+        if (index === tasks.length || tasks.length === 0) {
             // async task done
             console.log('done')
             console.log(schema)
@@ -176,17 +211,19 @@ Validator.prototype.check = function() {
 
             if (error) {
                 alert(error)
-            };
+            } else {
+                alert('submit action')
+            }
         };
     }
 
-    if (stack.length === 0) {
+    if (tasks.length === 0) {
         done()
     };
 
-    for (var i = stack.length - 1; i >= 0; i--) {
-        field = stack[i].field
+    for (var i = 0; i < tasks.length; i++) {
+        field = tasks[i].field
         value = schema[field].value
-        stack[i].handle(field, value, done)
+        tasks[i].handle(field, value, done)
     };
 }

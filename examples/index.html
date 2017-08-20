@@ -1,78 +1,96 @@
 <html>
   <head>
-    <title>sign up</title>
+    <link rel="stylesheet" href="examples/bootstrap.min.css"/>
+    <title>demo</title>
     <style>
-      * {
-        box-sizing: border-box;
-      }
-
-      body, form {
-        margin: 0 auto;
-        font: 14px "Open Sans","Helvetica Neue",Helvetica,Arial,STHeiti,"Microsoft Yahei",sans-serif;
-      }
-
       .app {
         margin: 0 auto;
-        width: 400px;
+        margin-top: 50px;
+        width: 600px;
       }
-
-      .row {
-        padding: 10px 5px;
-      }
-
-      input {
+      .btn-wrap {
         width: 100%;
-        height: 25px;
-        outline: 0;
+        text-align: right;
       }
 
-      button {
-        float: right;
+      #submit {
+        margin-right: 15px;
       }
     </style>
   </head>
   <body>
     <div class="app">
-      <form id="form" action="/">
-        <div class="row">
-          <label>username
-            <input type="text" name="username" id="username" />
-            <span class="message"></span>
-          </label>
-        </div>
-        <div class="row">
-          <label>password
-            <input type="password" name="password" id="password" />
-            <span class="message"></span>
-          </label>
-        </div>
-        <div class="row">
-          <label>confirm
-            <input type="password" name="confirm" id="confirm" />
-            <span class="message"></span>
-          </label>
-        </div>
-        <div class="row">
-          <label>sex
-            <input type="text" name="sex" id="sex" />
-          </label>
-        </div>
-        <div class="row">
-          <label>email
-            <input type="text" name="email" id="email" />
-          </label>
-        </div>
-        <div class="row">
-          <label>phone
-            <input type="text" name="phone" id="phone" />
-          </label>
-        </div>
-        <div class="row">
-          <button>submit</button>
-        </div>
-      </form>
-    </div>
+      <div class="container">
+
+        <form id="form" action="/">
+
+          <div class="form-group row">
+            <label for="username" class="col-sm-2 col-form-label">username</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="username" name="username">
+              <div class="form-control-feedback">message</div>
+              <small class="form-text text-muted">help info</small>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="password" class="col-sm-2 col-form-label">password</label>
+            <div class="col-sm-10">
+              <input type="password" class="form-control" id="password" name="password">
+              <div class="form-control-feedback">message</div>
+              <small class="form-text text-muted">help info</small>
+            </div>
+          </div>
+
+
+          <div class="form-group row">
+            <label for="confirm" class="col-sm-2 col-form-label">confirm</label>
+            <div class="col-sm-10">
+              <input type="password" class="form-control" id="confirm" name="confirm">
+              <div class="form-control-feedback">message</div>
+              <small class="form-text text-muted">help info</small>
+            </div>
+          </div>
+
+
+          <div class="form-group row">
+            <label for="sex" class="col-sm-2 col-form-label">sex</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="sex" name="sex">
+              <div class="form-control-feedback">message</div>
+              <small class="form-text text-muted">help info</small>
+            </div>
+          </div>
+
+
+          <div class="form-group row">
+            <label for="email" class="col-sm-2 col-form-label">email</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="email" name="email">
+              <div class="form-control-feedback">message</div>
+              <small class="form-text text-muted">help info</small>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="phone" class="col-sm-2 col-form-label">phone</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="phone" name="phone">
+              <div class="form-control-feedback">message</div>
+              <small class="form-text text-muted">help info</small>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <div class="btn-wrap">
+              <button type="submit" class="btn btn-primary pull-right" id="submit">Submit</button>
+            </div>
+          </div>
+        </form>
+
+      </div>
     <script src="../index.js"></script>
+    <script src="http://cdn.bootcss.com/jquery/1.9.1/jquery.min.js"></script>
     <script src="../node_modules/superagent/superagent.js"></script>
     <script src="examples/app.js"></script>
   </body>
