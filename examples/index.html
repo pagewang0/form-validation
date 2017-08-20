@@ -1,0 +1,79 @@
+<html>
+  <head>
+    <title>sign up</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body, form {
+        margin: 0 auto;
+        font: 14px "Open Sans","Helvetica Neue",Helvetica,Arial,STHeiti,"Microsoft Yahei",sans-serif;
+      }
+
+      .app {
+        margin: 0 auto;
+        width: 400px;
+      }
+
+      .row {
+        padding: 10px 5px;
+      }
+
+      input {
+        width: 100%;
+        height: 25px;
+        outline: 0;
+      }
+
+      button {
+        float: right;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <form id="form" action="/">
+        <div class="row">
+          <label>username
+            <input type="text" name="username" id="username" />
+            <span class="message"></span>
+          </label>
+        </div>
+        <div class="row">
+          <label>password
+            <input type="password" name="password" id="password" />
+            <span class="message"></span>
+          </label>
+        </div>
+        <div class="row">
+          <label>confirm
+            <input type="password" name="confirm" id="confirm" />
+            <span class="message"></span>
+          </label>
+        </div>
+        <div class="row">
+          <label>sex
+            <input type="text" name="sex" id="sex" />
+          </label>
+        </div>
+        <div class="row">
+          <label>email
+            <input type="text" name="email" id="email" />
+          </label>
+        </div>
+        <div class="row">
+          <label>phone
+            <input type="text" name="phone" id="phone" />
+          </label>
+        </div>
+        <div class="row">
+          <button>submit</button>
+        </div>
+      </form>
+    </div>
+    <script src="../index.js"></script>
+    <script src="../node_modules/superagent/superagent.js"></script>
+    <script src="examples/app.js"></script>
+  </body>
+</html>
