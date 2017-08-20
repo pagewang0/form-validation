@@ -181,7 +181,7 @@ Validator.prototype.check = function() {
         item = schema[field]
 
         if (!item.err && item.task) {
-            tasks.push(schema[field].task)
+            tasks.push(item.task)
         };
     };
 
@@ -204,8 +204,8 @@ Validator.prototype.check = function() {
             for (var i = 0; i < fields.length; i++) {
                 field = fields[i]
 
-                if (schema[field].err) {
-                    error += schema[field].msg + '\r\n'
+                if (item.err) {
+                    error += item.msg + '\r\n'
                 };
             };
 
