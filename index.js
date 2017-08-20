@@ -130,8 +130,8 @@ Validator.prototype.check = function() {
                         break
                     }
                     if (length.min && value.length < length.min) {
-                        schema[field].err = true
-                        schema[field].msg =  messages[field]._length.min
+                        item.err = true
+                        item.msg =  messages[field]._length.min
                         showError(item)
                         break
                     }
