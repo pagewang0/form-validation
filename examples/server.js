@@ -3,7 +3,20 @@ var fs = require('fs')
 
 var app = express()
 
-app.use(express.static('../'))
+app.use(express.static('..'))
+
+// function create_user_before (req, res, next) {
+//     var user = new User()
+
+//     user.validation(err => {
+//         if (err) {
+//             res.send(err)
+//             return
+//         };
+
+//         next()
+//     })
+// }
 
 app.get('/', (req, res) => {
     res.type('text/html; charset=utf-8')

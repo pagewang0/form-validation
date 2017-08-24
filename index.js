@@ -10,7 +10,7 @@ Validator.prototype.reset = function () {
     var item
     var schema = this.schema
     var field, fields = Object.keys(schema)
-    var prop, props = ['required', '_length', 'type', 'enum', 'equal']
+    var prop, props = ['required', 'length', 'type', 'enum', 'equal']
 
     for (var i = 0; i < fields.length; i++) {
         field = fields[i] // field name
@@ -76,7 +76,7 @@ Validator.prototype.check = function() {
     var schema = this.schema
     var messages = this.messages
     var field, fields = Object.keys(schema)
-    var prop, props = ['required', '_length', 'type', 'enum', 'equal']
+    var prop, props = ['required', 'length', 'type', 'enum', 'equal']
 
     function handleError(field, type) {
         console.log(field, type)
@@ -119,19 +119,19 @@ Validator.prototype.check = function() {
                 break
             };
 
-            if (item._length && prop === '_length') {
+            if (item.length && prop === 'length') {
                 var length = item[prop]
 
                 if (typeof(length) === 'object') {
                     if (length.max && value.length > length.max) {
                         item.err = true
-                        item.msg =  messages[field]._length.max
+                        item.msg =  messages[field].length.max
                         showError(item)
                         break
                     }
                     if (length.min && value.length < length.min) {
                         item.err = true
-                        item.msg =  messages[field]._length.min
+                        item.msg =  messages[field].length.min
                         showError(item)
                         break
                     }
@@ -188,9 +188,8 @@ Validator.prototype.check = function() {
     function done(err, field) {
         var error = ''
         item = schema[field]
-//        console.log(schema)
         index++
-//        console.log(index)
+
         if (err) {
             item.err = true
             item.msg = item.task.msg
@@ -198,14 +197,12 @@ Validator.prototype.check = function() {
         };
 
         if (index === tasks.length || tasks.length === 0) {
-            // async task done
-            console.log('done')
-            console.log(schema)
+            // console.log(schema)
             for (var i = 0; i < fields.length; i++) {
                 field = fields[i]
 
-                if (item.err) {
-                    error += item.msg + '\r\n'
+                if (schema[field].err) {
+                    error += schema[field].msg + '\r\n'
                 };
             };
 
@@ -218,7 +215,7 @@ Validator.prototype.check = function() {
     }
 
     if (tasks.length === 0) {
-        done()
+        return done()
     };
 
     for (var i = 0; i < tasks.length; i++) {
