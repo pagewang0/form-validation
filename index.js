@@ -3,12 +3,25 @@ function Validator (schema) {
 }
 
 Validator.prototype.messages = function (messages) {
+    var self = this
     this.messages = messages
+
+    return {
+        set: function(fn) {
+            self.messages.set = fn
+            return this
+        },
+        reset: function(fn) {
+            self.messages.reset = fn
+            return this
+        }
+    }
 }
 
 Validator.prototype.reset = function () {
     var item
     var schema = this.schema
+    var messages = this.messages
     var field, fields = Object.keys(schema)
     var prop, props = ['required', 'length', 'type', 'enum', 'equal']
 
@@ -19,7 +32,9 @@ Validator.prototype.reset = function () {
         if (item.err) {
             if (item._msg) {
                 item._msg.reset()
-            };
+            } else {
+                messages.reset(field)
+            }
 
             item.msg = ''
             item.err = false
@@ -84,13 +99,19 @@ Validator.prototype.check = function() {
         item.err = true
         item.msg = messages[field][type]
 
-        showError(item)
+        showError(item, field)
     }
 
-    function showError (item) {
-        if (item._msg && item.err) {
+    function showError (item, field) {
+        if (item._msg) {
             item._msg.set(1)
-        };
+        } else {
+            messages.set(1, field)
+        }
+
+        // if (item._msg && item.err) {
+        //     item._msg.set(1)
+        // };
     }
 
     this.reset()
@@ -126,13 +147,13 @@ Validator.prototype.check = function() {
                     if (length.max && value.length > length.max) {
                         item.err = true
                         item.msg =  messages[field].length.max
-                        showError(item)
+                        showError(item, field)
                         break
                     }
                     if (length.min && value.length < length.min) {
                         item.err = true
                         item.msg =  messages[field].length.min
-                        showError(item)
+                        showError(item, field)
                         break
                     }
                 } else if (value.length !== length) {
@@ -193,21 +214,22 @@ Validator.prototype.check = function() {
         if (err) {
             item.err = true
             item.msg = item.task.msg
-            showError(item)
+            showError(item, field)
         };
 
         if (index === tasks.length || tasks.length === 0) {
-            // console.log(schema)
+            console.log(schema)
             for (var i = 0; i < fields.length; i++) {
                 field = fields[i]
 
                 if (schema[field].err) {
                     error += schema[field].msg + '\r\n'
-                };
+                }
             };
 
             if (error) {
-                alert(error)
+                console.log(error)
+                //alert(error)
             } else {
                 alert('submit action')
             }

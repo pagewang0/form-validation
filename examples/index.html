@@ -19,7 +19,7 @@
     </style>
   </head>
   <body>
-    <div class="app">
+    <div class="app" id="mocha">
       <div class="container">
 
         <form id="form" action="/">
@@ -93,5 +93,10 @@
     <script src="http://cdn.bootcss.com/jquery/1.9.1/jquery.min.js"></script>
     <script src="../node_modules/superagent/superagent.js"></script>
     <script src="examples/app.js"></script>
+    <script src="../node_modules/mocha/mocha.js"></script>
+    <script src="../bower_components/assert/assert.js"></script>
+    <script>mocha.setup('bdd')</script>
+    <script src="../test/app.js"></script>
+    <script>mocha.run()</script>
   </body>
 </html>

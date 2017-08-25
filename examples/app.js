@@ -8,7 +8,7 @@
         phone: {required: true, type: Number, length: 11},
     })
 
-    validator.messages({
+    var messages = validator.messages({
         username: {required: '用户名是必须的', length: {max: '用户名长度超过最大值', min: '用户名长度小于最小值'}},
         password: {required: '密码是必须的', length: {max: '密码长度超过最大值', min: '密码长度小于最小值'}},
         confirm: {equal: '确认密码必须和密码保持一致'},
@@ -18,6 +18,28 @@
     })
 
     validator.bind('form')  // bind form id
+
+    messages.set(function(err, field) {
+        var item = validator.schema[field]
+        var element = $('#' + field)
+
+        if (err) {
+            element.addClass('form-control-danger')
+            element.parent().parent().addClass('has-danger')
+            element.siblings('.form-control-feedback').text(item.msg)
+        } else {
+            // set success style
+            // element.addClass('form-control-success')
+            // element.parent().parent().addClass('has-success')
+            // element.siblings('.form-control-feedback').text('')
+        }
+    }).reset(function(field) {
+        var element = $('#' + field)
+
+        element.removeClass('form-control-danger')
+        element.parent().parent().removeClass('has-danger')
+        element.siblings('.form-control-feedback').text('message')
+    })
 
     var request = superagent
 
@@ -47,21 +69,5 @@
 
     validator.path('username').get(function() {
         return document.getElementById('username').value.trim()
-    })
-
-    validator.path('username')._msg.set(function(err) {
-        var username = validator.schema.username
-
-        if (err) {
-            $('#username').addClass('form-control-danger')
-            $('#username').parent().parent().addClass('has-danger')
-            $('#username').siblings('.form-control-feedback').text(username.msg)
-        } else {
-            // set success style
-        }
-    }).reset(function() {
-            $('#username').removeClass('form-control-danger')
-            $('#username').parent().parent().removeClass('has-danger')
-            $('#username').siblings('.form-control-feedback').text('message')
     })
 })()
