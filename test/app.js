@@ -66,4 +66,16 @@ describe('check feature', () => {
             done()
         }, 1000)
     })
+
+    it('validation success', function (done) {
+        $('#username').val('18311309902')
+        $('#password').val('1234567')
+        $('#confirm').val('1234567')
+        $('#email').val('page@gmail.com')
+        $('#sex').val('保密')
+        $('#phone').val('18311309902')
+
+        $('#submit').click()
+        done()
+    })
 })
