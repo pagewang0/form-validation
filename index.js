@@ -2,6 +2,10 @@ function Validator (schema) {
     this.schema = schema
 }
 
+Validator.prototype.submit = function (fn) {
+    this.submit = fn
+}
+
 Validator.prototype.messages = function (messages) {
     var self = this
     this.messages = messages
@@ -88,6 +92,7 @@ Validator.prototype.bind = function(id) {
 Validator.prototype.check = function() {
     var item
     var index = 0
+    var submit = this.submit
     var schema = this.schema
     var messages = this.messages
     var field, fields = Object.keys(schema)
@@ -108,10 +113,6 @@ Validator.prototype.check = function() {
         } else {
             messages.set(1, field)
         }
-
-        // if (item._msg && item.err) {
-        //     item._msg.set(1)
-        // };
     }
 
     this.reset()
@@ -231,7 +232,7 @@ Validator.prototype.check = function() {
                 console.log(error)
                 //alert(error)
             } else {
-                alert('submit action')
+                submit()
             }
         };
     }

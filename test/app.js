@@ -4,8 +4,8 @@ describe('check feature', () => {
         var btn = $('#submit')
 
         btn.click()
-        assert.equal(element.hasClass('form-control-danger'), true)
-        assert.equal(element.parent().parent().hasClass('has-danger'), true)
+        assert.equal(element.hasClass('form-control-warning'), true)
+        assert.equal(element.parent().parent().hasClass('has-warning'), true)
         assert.equal(element.siblings('.form-control-feedback').text(), '用户名是必须的')
 
         element.val('1234')
@@ -23,6 +23,8 @@ describe('check feature', () => {
         element.val('111')
 
         btn.click()
+        assert.equal(element.hasClass('form-control-danger'), true)
+        assert.equal(element.parent().parent().hasClass('has-danger'), true)
         assert.equal(element.siblings('.form-control-feedback').text(), '确认密码必须和密码保持一致')
 
 
@@ -67,7 +69,7 @@ describe('check feature', () => {
         }, 1000)
     })
 
-    it('validation success', function (done) {
+    it('validation success and submit', function (done) {
         $('#username').val('18311309902')
         $('#password').val('1234567')
         $('#confirm').val('1234567')
@@ -76,6 +78,10 @@ describe('check feature', () => {
         $('#phone').val('18311309902')
 
         $('#submit').click()
-        done()
+
+        setTimeout(() => {
+            assert.equal(201, $('#submit').data('code'))
+            done()
+        }, 1000)
     })
 })

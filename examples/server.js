@@ -18,6 +18,10 @@ app.use(express.static('..'))
 //     })
 // }
 
+app.post('/user', (req, res) => {
+    res.sendStatus(201)
+})
+
 app.get('/', (req, res) => {
     res.type('text/html; charset=utf-8')
     res.send(fs.readFileSync('index.html'))

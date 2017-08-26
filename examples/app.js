@@ -19,6 +19,31 @@
 
     validator.bind('form')  // bind form id
 
+    var request = superagent
+
+    validator.submit(function() {
+        var schema = validator.schema
+        var user = {
+            username: schema.username.value,
+            password: schema.password.value,
+            confirm: schema.confirm.value,
+            email: schema.email.value,
+            sex: schema.sex.value,
+            phone: schema.phone.value
+        }
+
+        request.post('/user')
+        .send({user: user})
+        .end((err, res) => {
+            if (err) {
+                console.log(err)
+                return
+            };
+
+            $('#submit').data('code', res.status) // for test code
+        })
+    })
+
     messages.set(function(err, field) {
         var item = validator.schema[field]
         var element = $('#' + field)
@@ -41,7 +66,22 @@
         element.siblings('.form-control-feedback').text('message')
     })
 
-    var request = superagent
+    validator.path('username')._msg.set(function(err) {
+        var item = validator.schema.username
+        var element = $('#username')
+
+        if (err) {
+            element.addClass('form-control-warning')
+            element.parent().parent().addClass('has-warning')
+            element.siblings('.form-control-feedback').text(item.msg)
+        };
+    }).reset(function() {
+        var element = $('#username')
+
+        element.removeClass('form-control-warning')
+        element.parent().parent().removeClass('has-warning')
+        element.siblings('.form-control-feedback').text('message')
+    })
 
     validator.path('username').validate(function(field, username, done) {
         request('/username')
