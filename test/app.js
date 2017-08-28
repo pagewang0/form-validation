@@ -79,6 +79,8 @@ describe('check feature', () => {
 
         $('#submit').click()
 
+        this.timeout(3000)
+
         setTimeout(() => {
             assert.equal(201, $('#submit').data('code'))
             done()
