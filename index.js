@@ -1,5 +1,6 @@
 function Validator (schema) {
     this.schema = schema
+    this.props = ['required', 'length', 'type', 'enum', 'equal']
 }
 
 Validator.prototype.submit = function (fn) {
@@ -27,7 +28,7 @@ Validator.prototype.reset = function () {
     var schema = this.schema
     var messages = this.messages
     var field, fields = Object.keys(schema)
-    var prop, props = ['required', 'length', 'type', 'enum', 'equal']
+    var prop, props = this.props
 
     for (var i = 0; i < fields.length; i++) {
         field = fields[i] // field name
@@ -96,7 +97,7 @@ Validator.prototype.check = function() {
     var schema = this.schema
     var messages = this.messages
     var field, fields = Object.keys(schema)
-    var prop, props = ['required', 'length', 'type', 'enum', 'equal']
+    var prop, props = this.props
 
     function handleError(field, type) {
         console.log(field, type)
