@@ -28,7 +28,7 @@ app.get('/', (req, res) => {
 })
 
 app.get('/username', (req, res) => {
-    var username = '18311309901'
+    var username = '12345678910'
 
     if (req.query.username === username) {
         return res.sendStatus(400)
@@ -38,7 +38,7 @@ app.get('/username', (req, res) => {
 })
 
 app.get('/phone', (req, res) => {
-    var phone = '18311309901'
+    var phone = '12345678910'
 
     if (req.query.phone === phone) {
         return res.sendStatus(400)
@@ -48,5 +48,5 @@ app.get('/phone', (req, res) => {
 })
 
 app.listen(process.env.PORT || 3000 , function(){
-    console.log(this.address())
+    console.log('Express server listening on port ' + this.address().port)
 })

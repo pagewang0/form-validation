@@ -55,7 +55,7 @@ describe('check feature', () => {
 
     it('show async error msg', function (done) {
         var element = $('#username')
-        var username = '18311309901'
+        var username = '12345678910'
 
         element.val(username)
 
@@ -70,12 +70,12 @@ describe('check feature', () => {
     })
 
     it('validation success and submit', function (done) {
-        $('#username').val('18311309902')
+        $('#username').val('12345678911')
         $('#password').val('1234567')
         $('#confirm').val('1234567')
         $('#email').val('page@gmail.com')
         $('#sex').val('保密')
-        $('#phone').val('18311309902')
+        $('#phone').val('12345678911')
 
         $('#submit').click()
 
