@@ -2,7 +2,6 @@
     function Validator (schema) {
         this.schema = schema
         this.fields = Object.keys(schema)
-        this.props = ['required', 'length', 'type', 'enum', 'equal']
     }
 
     window.Validator = Validator
@@ -32,7 +31,6 @@
         var schema = this.schema
         var messages = this.messages
         var field, fields = this.fields
-        var prop, props = this.props
 
         for (var i = 0; i < fields.length; i++) {
             field = fields[i] // field name
@@ -99,7 +97,6 @@
         var schema = this.schema
         var messages = this.messages
         var field, fields = this.fields
-        var props = this.props
 
         function handleError(field, type) {
             //console.log(field, type)
