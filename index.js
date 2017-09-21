@@ -99,7 +99,7 @@
         var schema = this.schema
         var messages = this.messages
         var field, fields = this.fields
-        var prop, props = this.props
+        var props = this.props
 
         function handleError(field, type) {
             //console.log(field, type)
