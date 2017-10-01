@@ -45,7 +45,6 @@
     Validator.prototype.reset = function () {
         var item
         var schema = this.schema
-        var messages = this.messages
         var field, fields = this.fields
 
         for (var i = 0; i < fields.length; i++) {
@@ -208,17 +207,13 @@
         var index = 0
         var submit = this.submit
         var schema = this.schema
-        var messages = this.messages
         var field, fields = this.fields
         var handle_error = this.handle_error.bind(this)
-        var show_error = this.show_error.bind(this)
-
 
         this.reset()
 
         for (var i = 0; i < fields.length; i++) {
             field = fields[i] // field name
-            item = schema[field]
             this.check_one(field, true)
         }
 
