@@ -52,6 +52,28 @@ describe('check feature', () => {
         done()
     })
 
+    it('check one input item and show error msg', function (done) {
+        var username = $('#username')
+
+        username.val('')
+
+        username.focus()
+        var password = $('#password')
+        password.focus()
+        assert.equal(username.siblings('.form-control-feedback').text(), '用户名是必须的')
+
+        username.focus()
+        username.val('12345678910')
+        password.focus()
+
+        this.timeout(5000)
+
+        setTimeout(() => {
+            assert.equal(username.siblings('.form-control-feedback').text(), '用户名已存在')
+            done()
+        }, 1000)
+    })
+
 
     it('show async error msg', function (done) {
         var element = $('#username')
@@ -61,7 +83,7 @@ describe('check feature', () => {
 
         $('#submit').click()
 
-        this.timeout(3000)
+        this.timeout(5000)
 
         setTimeout(() => {
             assert.equal(element.siblings('.form-control-feedback').text(), '用户名已存在')
@@ -79,7 +101,7 @@ describe('check feature', () => {
 
         $('#submit').click()
 
-        this.timeout(3000)
+        this.timeout(5000)
 
         setTimeout(() => {
             assert.equal(201, $('#submit').data('code'))

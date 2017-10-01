@@ -20,6 +20,11 @@
     validator.bind('form')  // bind form id
 
     var request = superagent
+    var username = document.getElementById('username')
+
+    username.addEventListener('blur', function () {
+        validator.check_one('username', false)
+    }, false)
 
     validator.submit(function() {
         var schema = validator.schema
