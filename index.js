@@ -209,6 +209,7 @@
         var schema = this.schema
         var field, fields = this.fields
         var handle_error = this.handle_error.bind(this)
+        var show_error = this.show_error.bind(this)
 
         this.reset()
 
