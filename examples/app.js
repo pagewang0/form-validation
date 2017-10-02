@@ -23,7 +23,7 @@
     var username = document.getElementById('username')
 
     username.addEventListener('blur', function () {
-        validator.check_one('username', false)
+        validator.check_one('username')
     }, false)
 
     validator.submit(function() {
