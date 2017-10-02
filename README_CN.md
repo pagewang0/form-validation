@@ -1,16 +1,12 @@
-## based on validate before form submit
+## 基于表单提交“前”验证的代码
 
-####
-<b>Inspired</b> by mongoose.Schema, achieve an <b>config type</b> form validation library
-####
-[中文说明](https://github.com/pagewang0/form-validation/blob/master/README_CN.md)
+灵感来自于mongoose.Schema 实现一个“配置型”的表单验证“库”
 
-###
 Feature:
-* single input item validate (synchronous and asynchronous)
-* based on validate before form submit
-* provide field.get method get field value
-* DIY validation method
+* 输入项单项同步和异步验证
+* 表单提交前验证(同步和异步)
+* 提供 field.get 方法用于获取value
+* 自定义验证方法
 
 ```javascript
 var validator = new Validator({
@@ -44,4 +40,3 @@ validator.path('username').validate(function(field, username, done) {
 }, '用户名已存在')
 ```
 
-ps: I am english is poor,  please forgive...
