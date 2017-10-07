@@ -89,16 +89,6 @@
         }
     }
 
-    Validator.prototype.bind = function(id) {
-        var self = this
-        var element = document.getElementById(id)
-
-        element.addEventListener('submit', function(e) {
-            e.preventDefault()
-            self.check()
-        }, false)
-    }
-
     Validator.prototype.show_error = function (item, field) {
         var messages = this.messages
 

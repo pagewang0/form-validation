@@ -17,13 +17,16 @@
         phone: {required: '手机号码是必须的', type: '手机号码值类型错误', length: '手机号码长度必须为11'}
     })
 
-    validator.bind('form')  // bind form id
-
     var request = superagent
     var username = document.getElementById('username')
 
     username.addEventListener('blur', function () {
         validator.check_one('username')
+    }, false)
+
+    document.getElementById('form').addEventListener('submit', function (event) {
+        event.preventDefault()
+        validator.check()
     }, false)
 
     validator.submit(function() {
