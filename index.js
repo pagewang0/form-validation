@@ -54,6 +54,10 @@
         }
     }
 
+    Validator.prototype.get = function (fn) {
+        this._get = fn
+    }
+
     Validator.prototype.path = function (field) {
         var item = this.schema[field]
 
@@ -106,7 +110,6 @@
     }
 
     Validator.prototype.handle_error = function (field, type) {
-        //console.log(field, type)
         var schema = this.schema
         var messages = this.messages
         var item = schema[field]
@@ -131,7 +134,9 @@
         if (item.get) {
             item.value = item.get()
         } else {
-            item.value = document.getElementById(field).value.trim()
+            this._get
+            ? item.value = this._get(field)
+            : item.value = document.getElementById(field).value
         }
 
         if (item.value === undefined) {
@@ -241,7 +246,6 @@
             };
 
             if (index === tasks.length || tasks.length === 0) {
-                //console.log(schema)
                 for (var i = 0; i < fields.length; i++) {
                     field = fields[i]
 

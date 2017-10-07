@@ -4,6 +4,7 @@ describe('check feature', () => {
         var btn = $('#submit')
 
         btn.click()
+
         assert.equal(element.hasClass('form-control-warning'), true)
         assert.equal(element.parent().parent().hasClass('has-warning'), true)
         assert.equal(element.siblings('.form-control-feedback').text(), '用户名是必须的')
@@ -11,12 +12,12 @@ describe('check feature', () => {
         element.val('1234')
 
         btn.click()
-        assert.equal(element.siblings('.form-control-feedback').text(), '用户名长度小于最小值')
+        assert.equal(element.siblings('.form-control-feedback').text(), '用户名长度小于6')
 
         element.val('183113099011')
 
         btn.click()
-        assert.equal(element.siblings('.form-control-feedback').text(), '用户名长度超过最大值')
+        assert.equal(element.siblings('.form-control-feedback').text(), '用户名长度超过11')
 
 
         element = $('#confirm')

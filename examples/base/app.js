@@ -9,8 +9,8 @@
     })
 
     var messages = validator.messages({
-        username: {required: '用户名是必须的', length: {max: '用户名长度超过最大值', min: '用户名长度小于最小值'}},
-        password: {required: '密码是必须的', length: {max: '密码长度超过最大值', min: '密码长度小于最小值'}},
+        username: {required: '用户名是必须的', length: {max: '用户名长度超过11', min: '用户名长度小于6'}},
+        password: {required: '密码是必须的', length: {max: '密码长度超过11', min: '密码长度小于6'}},
         confirm: {equal: '确认密码必须和密码保持一致'},
         email: {required: 'email是必须的', type: 'email格式不正确'},
         sex: {required: '性别是必须的', enum: '性别输入值不在限定范围之内'},

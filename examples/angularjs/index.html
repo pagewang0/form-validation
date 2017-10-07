@@ -1,0 +1,105 @@
+<html>
+  <head>
+    <link rel="stylesheet" href="examples/base/bootstrap.min.css"/>
+    <title>demo</title>
+    <style>
+      .app {
+        margin: 0 auto;
+        margin-top: 50px;
+        width: 600px;
+      }
+      .btn-wrap {
+        width: 100%;
+        text-align: right;
+      }
+
+      #submit {
+        margin-right: 15px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app" ng-app="app">
+      <div class="container" ng-controller="app_control">
+
+        <form id="form" action="/" ng-submit="app_submit()">
+
+          <div class="{{ view_model.username.parent }}">
+            <label for="username" class="col-sm-2 col-form-label">username</label>
+            <div class="col-sm-10">
+              <input type="text" class="{{ view_model.username.style }}" id="username" name="username" ng-model="username" ng-blur="username_change()">
+              <div class="form-control-feedback">{{ view_model.username.msg }}</div>
+              <small class="form-text text-muted">输入用户名位数在6-11之间 且未被注册过</small>
+            </div>
+          </div>
+
+          <div class="{{ view_model.password.parent }}">
+            <label for="password" class="col-sm-2 col-form-label">password</label>
+            <div class="col-sm-10">
+              <input type="password" class="{{ view_model.password.style }}" id="password" name="password" ng-model="password">
+              <div class="form-control-feedback">{{ view_model.password.msg }}</div>
+              <small class="form-text text-muted">输入密码位数在6-11之间</small>
+            </div>
+          </div>
+
+
+          <div class="{{ view_model.confirm.parent }}">
+            <label for="confirm" class="col-sm-2 col-form-label">confirm</label>
+            <div class="col-sm-10">
+              <input type="password" class="{{ view_model.confirm.style }}" id="confirm" name="confirm" ng-model="confirm">
+              <div class="form-control-feedback">{{ view_model.confirm.msg }}</div>
+              <small class="form-text text-muted">需要与密码保持一致</small>
+            </div>
+          </div>
+
+
+          <div class="{{ view_model.sex.parent }}">
+            <label for="sex" class="col-sm-2 col-form-label">sex</label>
+            <div class="col-sm-10">
+              <input type="text" class="{{ view_model.sex.style }}" id="sex" name="sex" ng-model="sex">
+              <div class="form-control-feedback">{{ view_model.sex.msg }}</div>
+              <small class="form-text text-muted">输入值必须为: 男或女或保密</small>
+            </div>
+          </div>
+
+
+          <div class="{{ view_model.email.parent }}">
+            <label for="email" class="col-sm-2 col-form-label">email</label>
+            <div class="col-sm-10">
+              <input type="text" class="{{ view_model.email.style }}" id="email" name="email" ng-model="email">
+              <div class="form-control-feedback">{{ view_model.email.msg }}</div>
+              <small class="form-text text-muted">必须为email格式</small>
+            </div>
+          </div>
+
+          <div class="{{ view_model.phone.parent }}">
+            <label for="phone" class="col-sm-2 col-form-label">phone</label>
+            <div class="col-sm-10">
+              <input type="text" class="{{ view_model.phone.style }}" id="phone" name="phone" ng-model="phone">
+              <div class="form-control-feedback">{{ view_model.phone.msg }}</div>
+              <small class="form-text text-muted">必须为11位数的手机号 且未被注册过</small>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <div class="btn-wrap">
+              <button type="submit" class="btn btn-primary pull-right" id="submit" data-code="{{ view_model.code }}">Submit</button>
+            </div>
+          </div>
+        </form>
+
+      </div>
+    <div id="mocha"></div>
+    <script src="http://cdn.bootcss.com/jquery/1.9.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.6/angular.min.js"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-mocks/1.6.6/angular-mocks.min.js"></script> -->
+    <script src="index.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/superagent/3.6.3/superagent.min.js"></script>
+    <script src="examples/angularjs/app.js"></script>
+    <!-- <script src="../node_modules/mocha/mocha.js"></script>
+    <script src="../bower_components/assert/assert.js"></script> -->
+    <!-- <script>mocha.setup('bdd')</script>
+    <script src="examples/angularjs/test.js"></script>
+    <script>mocha.run()</script> -->
+  </body>
+</html>

@@ -3,7 +3,7 @@ var fs = require('fs')
 
 var app = express()
 
-app.use(express.static('..'))
+app.use(express.static('../..'))
 
 // function create_user_before (req, res, next) {
 //     var user = new User()
