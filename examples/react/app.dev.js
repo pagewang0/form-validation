@@ -183,7 +183,6 @@ class App extends React.Component {
             state[field] = Object.assign({}, styles, state[field])
         }
 
-        var state = this.state
         var setState = this.setState.bind(this)
 
         this.validator = validation(state, setState)
@@ -206,7 +205,6 @@ class App extends React.Component {
     }
 
     render() {
-        var self = this
         var fields = this.fields
         var state = this.state
         var handle_change = this.handle_change

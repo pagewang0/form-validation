@@ -4,7 +4,6 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "test",
     "start": "node server.js",
     "build": "browserify -t [ babelify --presets [ react ] ] app.dev.js -o app.js"
   },
