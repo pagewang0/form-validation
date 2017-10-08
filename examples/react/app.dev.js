@@ -34,7 +34,7 @@ var validation = (state, setState) => {
         phone: {required: '手机号码是必须的', type: '手机号码值类型错误', length: '手机号码长度必须为11'}
     })
 
-    validator.path('username')._msg.set(err => {
+    validator.path('username').message.set(err => {
         var username = state.username
         var item = validator.schema.username
 

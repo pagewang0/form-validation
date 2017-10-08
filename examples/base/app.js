@@ -74,7 +74,7 @@
         element.siblings('.form-control-feedback').text('message')
     })
 
-    validator.path('username')._msg.set(function(err) {
+    validator.path('username').message.set(function(err) {
         var item = validator.schema.username
         var element = $('#username')
 

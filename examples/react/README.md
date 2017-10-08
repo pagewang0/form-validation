@@ -7,11 +7,13 @@ npm i --save-dev
 
 ### run
 ```javascript
+npm run build
 node server.js
 ```
 
 ### run test
 ```javascript
-protractor e2e-tests/protractor.conf.js
+npm run build
+npm run test
 ```
 

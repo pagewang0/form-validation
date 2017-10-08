@@ -43,7 +43,7 @@
 
         var request = superagent
 
-        validator.path('username')._msg.set(function(err) {
+        validator.path('username').message.set(function(err) {
             var username = $scope.view_model.username
             var item = validator.schema.username
 
