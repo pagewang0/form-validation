@@ -27,6 +27,10 @@ app.get('/', (req, res) => {
     res.send(fs.readFileSync('index.html'))
 })
 
+app.post('/', (req, res) => {
+    res.send('create ok')
+})
+
 app.get('/username', (req, res) => {
     var username = '12345678910'
 

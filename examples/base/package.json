@@ -1,0 +1,12 @@
+{
+  "name": "base",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "protractor ../../test/protractor.conf.js",
+    "start": "node server.js"
+  },
+  "author": "",
+  "license": "ISC"
+}

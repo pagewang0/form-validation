@@ -18,38 +18,22 @@
     })
 
     var request = superagent
-    var username = document.getElementById('username')
+    var form = document.getElementById('form')
 
-    username.addEventListener('blur', function () {
+    document.getElementById('username').addEventListener('blur', function () {
         validator.check_one('username')
     }, false)
 
-    document.getElementById('form').addEventListener('submit', function (event) {
+    function submit(event) {
         event.preventDefault()
         validator.check()
-    }, false)
+    }
+
+    document.getElementById('form').addEventListener('submit', submit, false)
 
     validator.submit(function() {
-        var schema = validator.schema
-        var user = {
-            username: schema.username.value,
-            password: schema.password.value,
-            confirm: schema.confirm.value,
-            email: schema.email.value,
-            sex: schema.sex.value,
-            phone: schema.phone.value
-        }
-
-        request.post('/user')
-        .send({user: user})
-        .end((err, res) => {
-            if (err) {
-                console.log(err)
-                return
-            };
-
-            $('#submit').data('code', res.status) // for test code
-        })
+        document.getElementById('form').removeEventListener('submit', submit, false)
+        document.getElementById('submit').click()
     })
 
     messages.set(function(err, field) {

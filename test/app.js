@@ -1,112 +1,116 @@
+function clear(elem) {
+    elem.getAttribute('value').then(function (text) {
+        var len = text.length
+        var backspaceSeries = Array(len+1).join(protractor.Key.BACK_SPACE);
+        elem.sendKeys(backspaceSeries);
+    })
+}
+
 describe('check feature', () => {
-    it('show error msg', done => {
-        var element = $('#username')
+    it('show error messages', () => {
+        browser.get('/')
+
+        expect(element.all(by.css('.form-group.row')).first().getAttribute('class')).not.toMatch(/has-warning/)
+
         var btn = $('#submit')
 
         btn.click()
 
-        assert.equal(element.hasClass('form-control-warning'), true)
-        assert.equal(element.parent().parent().hasClass('has-warning'), true)
-        assert.equal(element.siblings('.form-control-feedback').text(), '用户名是必须的')
+        expect($('#username').getAttribute('class')).toMatch(/form-control-warning/)
+        expect(element.all(by.css('.form-group.row')).first().getAttribute('class')).toMatch(/has-warning/)
+        expect(element(by.id('username')).element(by.xpath('following-sibling::div')).getText()).toEqual('用户名是必须的')
 
-        element.val('1234')
+        $('#username').sendKeys('1234')
+        $('#password').click()
 
+        expect(element(by.id('username')).element(by.xpath('following-sibling::div')).getText()).toEqual('用户名长度小于6')
+
+        $('#username').clear().sendKeys('1234567891011')
         btn.click()
-        assert.equal(element.siblings('.form-control-feedback').text(), '用户名长度小于6')
 
-        element.val('183113099011')
+        expect(element(by.id('username')).element(by.xpath('following-sibling::div')).getText()).toEqual('用户名长度超过11')
 
+        $('#confirm').sendKeys('1')
         btn.click()
-        assert.equal(element.siblings('.form-control-feedback').text(), '用户名长度超过11')
 
+        expect(element(by.id('confirm')).element(by.xpath('following-sibling::div')).getText()).toEqual('确认密码必须和密码保持一致')
 
-        element = $('#confirm')
-        element.val('111')
-
+        $('#email').sendKeys('1')
         btn.click()
-        assert.equal(element.hasClass('form-control-danger'), true)
-        assert.equal(element.parent().parent().hasClass('has-danger'), true)
-        assert.equal(element.siblings('.form-control-feedback').text(), '确认密码必须和密码保持一致')
 
+        expect(element(by.id('email')).element(by.xpath('following-sibling::div')).getText()).toEqual('email格式不正确')
 
-        element = $('#email')
-        element.val('123')
-
+        $('#sex').sendKeys('1')
         btn.click()
-        assert.equal(element.siblings('.form-control-feedback').text(), 'email格式不正确')
 
-        element = $('#sex')
-        element.val('123')
+        expect(element(by.id('sex')).element(by.xpath('following-sibling::div')).getText()).toEqual('性别输入值不在限定范围之内')
 
+        $('#phone').sendKeys('1')
         btn.click()
-        assert.equal(element.siblings('.form-control-feedback').text(), '性别输入值不在限定范围之内')
 
-        element = $('#phone')
-        element.val('123')
+        expect(element(by.id('phone')).element(by.xpath('following-sibling::div')).getText()).toEqual('手机号码长度必须为11')
 
+        $('#phone').clear().sendKeys('1831130990a')
         btn.click()
-        assert.equal(element.siblings('.form-control-feedback').text(), '手机号码长度必须为11')
 
-        element.val('1831130990a')
-        btn.click()
-        assert.equal(element.siblings('.form-control-feedback').text(), '手机号码值类型错误')
-        done()
+        expect(element(by.id('phone')).element(by.xpath('following-sibling::div')).getText()).toEqual('手机号码值类型错误')
     })
 
-    it('check one input item and show error msg', function (done) {
-        var username = $('#username')
-
-        username.val('')
-
-        username.focus()
+    it('check one input item and show error msg', () => {
+        var username = element(by.id('username'))
         var password = $('#password')
-        password.focus()
-        assert.equal(username.siblings('.form-control-feedback').text(), '用户名是必须的')
 
-        username.focus()
-        username.val('12345678910')
-        password.focus()
+        clear(username)
 
-        this.timeout(5000)
+        username.click()
 
-        setTimeout(() => {
-            assert.equal(username.siblings('.form-control-feedback').text(), '用户名已存在')
-            done()
-        }, 1000)
+        password.click()
+
+        expect(element(by.id('username')).element(by.xpath('following-sibling::div')).getText()).toEqual('用户名是必须的')
+
+        username.sendKeys('12345678910')
+
+        password.click()
+
+        expect(element(by.id('username')).element(by.xpath('following-sibling::div')).getText()).toEqual('用户名已存在')
     })
 
+    it('async error message', () => {
+        var phone = element(by.id('phone'))
 
-    it('show async error msg', function (done) {
-        var element = $('#username')
-        var username = '12345678910'
+        clear(phone)
+        phone.sendKeys(12345678910)
+        $('#submit').click()
+        browser.sleep(1000)
+        expect(element(by.id('phone')).element(by.xpath('following-sibling::div')).getText()).toEqual('手机号已存在')
+    })
 
-        element.val(username)
+    it('validation success and submit', () => {
+        var username = element(by.id('username'))
+        var password = element(by.id('password'))
+        var confirm = element(by.id('confirm'))
+        var email = element(by.id('email'))
+        var sex = element(by.id('sex'))
+        var phone = element(by.id('phone'))
+
+        clear(username)
+        clear(password)
+        clear(confirm)
+        clear(email)
+        clear(sex)
+        clear(phone)
+
+        username.sendKeys('12345678911')
+        password.sendKeys('1234567')
+        confirm.sendKeys('1234567')
+        email.sendKeys('page@gmail.com')
+        sex.sendKeys('保密')
+        phone.sendKeys('12345678911')
 
         $('#submit').click()
 
-        this.timeout(5000)
+        browser.sleep(1000)
 
-        setTimeout(() => {
-            assert.equal(element.siblings('.form-control-feedback').text(), '用户名已存在')
-            done()
-        }, 1000)
-    })
-
-    it('validation success and submit', function (done) {
-        $('#username').val('12345678911')
-        $('#password').val('1234567')
-        $('#confirm').val('1234567')
-        $('#email').val('page@gmail.com')
-        $('#sex').val('保密')
-        $('#phone').val('12345678911')
-
-        $('#submit').click()
-
-        this.timeout(5000)
-
-        setTimeout(() => {
-            assert.equal(201, $('#submit').data('code'))
-            done()
-        }, 1000)
+        expect($('body').getText()).toEqual('create ok')
     })
 })
