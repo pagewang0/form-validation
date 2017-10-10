@@ -29,10 +29,10 @@
         validator.check()
     }
 
-    document.getElementById('form').addEventListener('submit', submit, false)
+    form.addEventListener('submit', submit, false)
 
     validator.submit(function() {
-        document.getElementById('form').removeEventListener('submit', submit, false)
+        form.removeEventListener('submit', submit, false)
         document.getElementById('submit').click()
     })
 
