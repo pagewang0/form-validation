@@ -7,6 +7,13 @@ function clear(elem) {
 }
 
 describe('check feature', () => {
+    // afterEach(() => {
+    //     browser.manage().logs()
+    //         .get('browser').then(function(log) {
+    //             console.log(log)
+    //     });
+    // })
+
     it('show error messages', () => {
         browser.get('/')
 

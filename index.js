@@ -17,7 +17,7 @@
 
     Validator.prototype.messages = function (messages) {
         var self = this
-        this.messages = messages
+        this._messages = messages
 
         return {
             set: function(fn) {
@@ -101,7 +101,7 @@
 
     Validator.prototype.handle_error = function (field, type) {
         var schema = this.schema
-        var messages = this.messages
+        var messages = this._messages
         var item = schema[field]
 
         item.err = true
@@ -112,7 +112,7 @@
 
     Validator.prototype.check_one = function (field, all) {
         var schema = this.schema
-        var messages = this.messages
+        var messages = this._messages
         var item = schema[field]
         var handle_error = this.handle_error.bind(this)
         var show_error = this.show_error.bind(this)
