@@ -9,7 +9,7 @@
 
         for (var i = 0; i < names.length; i++) {
             name = names[i]
-            Validator.prototype[name] = new Function(['fn'], "this._" + name + " = fn") // generate a new function
+            Validator.prototype[name] = new Function('fn', 'this._' + name + ' = fn') // generate a new function
         }
     }
 

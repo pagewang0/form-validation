@@ -6,7 +6,6 @@
   "scripts": {
     "start": "node server.js",
     "build": "browserify -t [ babelify --presets [ react ] ] app.dev.js -o app.js",
-    "test": "protractor e2e-tests/protractor.conf.js"
   },
   "author": "",
   "license": "ISC",

@@ -3,10 +3,6 @@
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
-  "scripts": {
-    "start": "node server.js",
-    "test": "protractor e2e-tests/protractor.conf.js"
-  },
   "author": "",
   "license": "ISC",
   "dependencies": {},

@@ -1,17 +1,15 @@
-## angularjs example
-
 ### install
 ```javascript
 npm i --save-dev
 ```
 
-### run
+### run server
 ```javascript
 node server.js
 ```
 
 ### run test
 ```javascript
-npm run test
+protractor e2e-tests/protractor.conf.js
 ```
 
