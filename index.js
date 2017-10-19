@@ -1,15 +1,19 @@
 (function () {
     "use strict"
+
     function Validator (schema) {
         this.schema = schema
         this.fields = Object.keys(schema)
+
+        var name, names = ['submit', 'get_errors', 'get']
+
+        for (var i = 0; i < names.length; i++) {
+            name = names[i]
+            Validator.prototype[name] = new Function(['fn'], "this._" + name + " = fn") // generate a new function
+        }
     }
 
     window.Validator = Validator
-
-    Validator.prototype.submit = function (fn) {
-        this.submit = fn
-    }
 
     Validator.prototype.messages = function (messages) {
         var self = this
@@ -54,16 +58,12 @@
         }
     }
 
-    Validator.prototype.get = function (fn) {
-        this._get = fn
-    }
-
     Validator.prototype.path = function (field) {
         var item = this.schema[field]
 
         return {
-            validate: function (fn, msg) {
-                item.task = {handle: fn, msg: msg, field: field}
+            validate: function (fn) {
+                item.task = {handle: fn, field: field}
             },
             get: function(fn) { // get field value
                 item.get = fn
@@ -93,9 +93,9 @@
         var messages = this.messages
 
         if (item._msg) {
-            item._msg.set(1)
+            item._msg.set(true)
         } else {
-            messages.set(1, field)
+            messages.set(true, field)
         }
     }
 
@@ -162,13 +162,9 @@
             };
         }
 
-        if (item.type) {
-            var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-
-            if ((item.type === 'email' && !re.test(value)) || (item.type === Number && !Number(value))) {
-                handle_error(field, 'type')
-                return
-            }
+        if (item.type && item.type === Number && !Number(value)) {
+            handle_error(field, 'type')
+            return
         }
 
         if (item.enum && !~item.enum.indexOf(value)) {
@@ -176,21 +172,11 @@
             return
         };
 
-        if (item.equal) {
-            var equal = item.equal
-            var other = schema[equal].value
-
-            if (value !== other) {
-                handle_error(field, 'equal')
-                return
-            };
-        };
-
         if (!all) {
             item.task.handle(field, value, function (err) {
                 if (err) {
                     item.err = true
-                    item.msg = item.task.msg
+                    item.msg = err
                     show_error(item, field)
                 };
             })
@@ -200,7 +186,7 @@
     Validator.prototype.check = function() {
         var item, value
         var index = 0
-        var submit = this.submit
+        var self = this
         var schema = this.schema
         var field, fields = this.fields
         var show_error = this.show_error.bind(this)
@@ -224,30 +210,37 @@
         };
 
         function done(err, field) {
-            var error = ''
+            var error = {}
+            var flag = false
             var item = schema[field]
+
             index++
 
             if (err) {
                 item.err = true
-                item.msg = item.task.msg
+                item.msg = err
                 show_error(item, field)
             };
 
             if (index === tasks.length || tasks.length === 0) {
                 for (var i = 0; i < fields.length; i++) {
                     field = fields[i]
+                    item = schema[field]
 
-                    if (schema[field].err) {
-                        error += schema[field].msg + '\r\n'
+                    if (item.err) {
+                        if (!flag) {
+                            flag = true
+                        }
+                        error[field] = item.msg
                     }
                 };
 
-                if (error) {
-                    console.log(error)
-                    //alert(error)
-                } else {
-                    submit()
+                if (!flag) {
+                    return self._submit()
+                }
+
+                if (self._get_errors) {
+                    self._get_errors(error)
                 }
             };
         }
