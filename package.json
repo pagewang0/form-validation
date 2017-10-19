@@ -1,6 +1,6 @@
 {
   "name": "form-validation",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "form validation",
   "main": "index.js",
   "directories": {
