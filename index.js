@@ -1,4 +1,4 @@
- "use strict"
+"use strict"
 function Validator (schema) {
   this.schema = schema
   this.fields = Object.keys(schema)
