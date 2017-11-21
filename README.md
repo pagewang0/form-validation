@@ -12,6 +12,7 @@ Feature:
 * 支持单个字段的同步/异步验证
 * 提供submit callback方法
 * 提供获取error信息对象集合
+* 支持umd(amd, cmd, global)方式加载
 
 基本用法见example:
 [base](https://github.com/pagewang0/form-validation/tree/master/examples/base), [angularjs](https://github.com/pagewang0/form-validation/tree/master/examples/angularjs), [react](https://github.com/pagewang0/form-validation/tree/master/examples/react)
