@@ -1,6 +1,7 @@
 ### install
 ```javascript
 npm i --save-dev
+npm run build
 ```
 
 ### run server

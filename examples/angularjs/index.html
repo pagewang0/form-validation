@@ -26,7 +26,7 @@
     <div class="app" ng-app="app">
       <div class="container" ng-controller="app_control">
 
-        <form id="form" action="/" ng-submit="app_submit()">
+        <form id="form" action="/" ng-submit="app_submit($event)">
 
           <div class="{{ view_model.username.parent }}">
             <label for="username" class="col-sm-2 col-form-label">username</label>

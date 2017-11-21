@@ -3,10 +3,15 @@
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
+  "scripts": {
+    "start": "node server.js",
+    "build": "browserify app.dev.js -o app.js"
+  },
   "author": "",
   "license": "ISC",
   "dependencies": {},
   "devDependencies": {
+    "browserify": "^14.5.0",
     "jasmine-core": "^2.8.0",
     "karma": "^1.7.1",
     "karma-chrome-launcher": "^2.2.0",
