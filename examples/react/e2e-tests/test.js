@@ -10,6 +10,9 @@ describe('check feature', () => {
     it('show error messages', () => {
         browser.get('/')
 
+        browser.driver.wait(function () {
+          return browser.isElementPresent(by.css('.form-group.row'))
+        })
         expect(element.all(by.css('.form-group.row')).first().getAttribute('class')).not.toMatch(/has-warning/)
 
         var btn = $('#submit')
@@ -17,6 +20,7 @@ describe('check feature', () => {
         btn.click()
 
         expect($('#username').getAttribute('class')).toMatch(/form-control-warning/)
+        // todo fix bug
         expect(element.all(by.css('.form-group.row')).first().getAttribute('class')).toMatch(/has-warning/)
         expect(element(by.id('username')).element(by.xpath('following-sibling::div')).getText()).toEqual('用户名是必须的')
 

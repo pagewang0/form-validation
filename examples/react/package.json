@@ -1,19 +1,17 @@
 {
-  "name": "react",
+  "name": "reactjs",
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
   "scripts": {
     "start": "node server.js",
-    "build": "browserify -t [ babelify --presets [ react ] ] app.dev.js -o app.js",
+    "build": "babel app.jsx -o app.js"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-preset-react": "^6.24.1",
-    "babelify": "^7.3.0",
-    "browserify": "^14.4.0",
     "jasmine-core": "^2.8.0",
     "karma": "^1.7.1",
     "karma-chrome-launcher": "^2.2.0",
@@ -21,5 +19,11 @@
     "express": "^4.15.4",
     "karma-junit-reporter": "^1.2.0",
     "protractor": "^5.1.2"
+  },
+  "dependencies": {
+    "react": "^16.1.1",
+    "react-dom": "^16.1.1",
+    "superagent": "^3.8.1",
+    "validator": "^9.1.1"
   }
 }
