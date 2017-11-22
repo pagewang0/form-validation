@@ -177,13 +177,12 @@ Validator.prototype.check_one = function (field, all) {
 }
 
 Validator.prototype.check = function() {
-  var item, value
+  var item, value, i
   var index = 0
   var self = this
   var schema = this.schema
   var field, fields = this.fields
   var show_error = this.show_error.bind(this)
-  var i
 
   for (i = 0; i < fields.length; i++) {
     field = fields[i]
