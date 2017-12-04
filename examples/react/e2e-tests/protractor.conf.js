@@ -2,7 +2,7 @@ exports.config = {
 
     // directConnect: true,
     //
-    // chromeDriver: '/Users/wangcong/Downloads/chromedriver', // download https://chromedriver.storage.googleapis.com/index.html?path=2.33/
+    chromeDriver: '/Users/wangcong/Downloads/chromedriver', // download https://chromedriver.storage.googleapis.com/index.html?path=2.33/
 
     allScriptsTimeout: 11000,
 
