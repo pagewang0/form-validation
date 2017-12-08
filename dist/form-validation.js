@@ -170,7 +170,7 @@
       }
     }
   
-    if (!all) {
+    if (!all && item.task) {
       item.task.handle(field, value, function (err) {
         if (err) {
           item.err = true

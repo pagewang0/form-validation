@@ -165,7 +165,7 @@ Validator.prototype.check_one = function (field, all) {
     }
   }
 
-  if (!all) {
+  if (!all && item.task) {
     item.task.handle(field, value, function (err) {
       if (err) {
         item.err = true
