@@ -75,7 +75,7 @@ Validator.prototype.path = function (field) {
       item._msg = item._msg || {};
       item._msg[k] = cb;
 
-      return path.message;
+      return this;
     };
   });
 
@@ -182,7 +182,7 @@ Validator.prototype.check = function() {
         }
       });
 
-      self._get_errors && self._get_errors(errors);
+      !flag && self._get_errors && self._get_errors(errors);
       flag && self._submit();
     }
   }
