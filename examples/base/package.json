@@ -9,12 +9,17 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-      "jasmine-core": "^2.8.0",
-      "karma": "^1.7.1",
-      "karma-chrome-launcher": "^2.2.0",
-      "karma-jasmine": "^1.1.0",
-      "karma-junit-reporter": "^1.2.0",
-      "express": "^4.15.4",
-      "protractor": "^5.1.2"
+    "jasmine-core": "^2.8.0",
+    "karma": "^1.7.1",
+    "karma-chrome-launcher": "^2.2.0",
+    "karma-jasmine": "^1.1.0",
+    "karma-junit-reporter": "^1.2.0",
+    "express": "^4.15.4",
+    "protractor": "^5.1.2"
+  },
+  "dependencies": {
+    "jquery": "^1.9.1",
+    "superagent": "^3.8.2",
+    "validator": "^9.4.1"
   }
 }

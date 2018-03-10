@@ -1,247 +1,195 @@
-"use strict"
+'use strict';
 function Validator (schema) {
-  this.schema = schema
-  this.fields = Object.keys(schema)
-  this.props = ['required', 'length', 'type', 'enum']
+  this.schema = schema;
+  this.fields = Object.keys(schema);
+  this.props = ['required', 'length', 'type', 'enum', 'min_length', 'max_length'];
 
-  var name, names = ['submit', 'get_errors', 'get']
+  this.transform(this.schema);
 
-  for (var i = 0; i < names.length; i++) {
-    name = names[i]
-    Validator.prototype[name] = new Function('fn', 'this._' + name + ' = fn')
-  }
+  ['submit', 'get_errors', 'get'].forEach(function (v) {
+    Validator.prototype[v] = new Function('fn', 'this._' + v + ' = fn');
+  });
 }
 
-Validator.prototype.messages = function (messages) {
-  var self = this
-  this._messages = messages
+Validator.prototype.transform = function (opts) {
+  this.fields.forEach(function (k) {
+    if (opts[k].length && opts[k].length.constructor === Object) {
+      if (opts[k].length.min) {
+        opts[k]['min_length'] = opts[k].length.min;
+      }
 
-  return {
-    set: function(fn) {
-      self.messages.set = fn
-      return this
-    },
-    reset: function(fn) {
-      self.messages.reset = fn
-      return this
+      if (opts[k].length.max) {
+        opts[k]['max_length'] = opts[k].length.max;
+      }
+      delete opts[k].length;
     }
+  });
+};
+
+Validator.prototype.messages = function (opts) {
+  var o = {};
+  var self = this;
+
+  if (!this._messages) {
+    this._messages = {
+      opts: opts
+    };
+
+    this.transform(this._messages.opts);
   }
-}
+
+  ['set', 'reset'].forEach(function (k) {
+    o[k] = function (cb) {
+      self._messages[k] = cb;
+      return this;
+    };
+  });
+
+  return o;
+};
 
 Validator.prototype.reset_one = function (item, field) {
-  var messages = this.messages
-
   if (item.err) {
-    item._msg ? item._msg.reset() : messages.reset(field)
-    item.msg = ''
-    item.err = false
+    item.err = null;
+    item._msg ? item._msg.reset() : this._messages.reset(field);
   }
-}
+};
 
 Validator.prototype.path = function (field) {
-  var item = this.schema[field]
-
-  return {
-    validate: function (fn) {
-      item.task = {
-        handle: fn,
-        field: field
-      }
+  var item = this.schema[field];
+  var path = {
+    get: function (cb) {
+      item.get = cb;
     },
-    get: function(fn) {
-      item.get = fn
-    },
-    message: {
-      set: function (fn) {
-        if (!item._msg) {
-          item._msg = {}
-        };
-
-        item._msg.set = fn
-        return this
-      },
-      reset: function (fn) {
-        if (!item._msg) {
-          item._msg = {}
-        };
-
-        item._msg.reset = fn
-        return this
-      }
+    validate: function (cb) {
+      item.cb = cb;
     }
-  }
-}
-
-Validator.prototype.show_error = function (item, field) {
-  var messages = this.messages
-
-  if (item._msg) {
-    item._msg.set(true)
-  } else {
-    messages.set(true, field)
-  }
-}
-
-Validator.prototype.handle_error = function (field, type) {
-  var schema = this.schema
-  var messages = this._messages
-  var item = schema[field]
-
-  item.err = true
-  item.msg = messages[field][type]
-
-  this.show_error(item, field)
-}
-
-Validator.prototype.check_one = function (field, all) {
-  var schema = this.schema
-  var prop, props = this.props
-  var messages = this._messages
-  var item = schema[field]
-  var handle_error = this.handle_error.bind(this)
-  var show_error = this.show_error.bind(this)
-
-  this.reset_one(item, field)
-
-  if (item.get) {
-    item.value = item.get()
-  } else {
-    this._get
-    ? item.value = this._get(field)
-    : item.value = document.getElementById(field).value
-  }
-
-  if (item.value === undefined) {
-    item.value = ''
-  }
-
-  var value = item.value
-  var length
-
-  for (var i = 0; i < props.length; i++) {
-    prop = props[i]
-
-    if (item[prop]) {
-      switch (prop) {
-        case 'required':
-          if (value === '') {
-            handle_error(field, prop)
-            return
-          }
-          break;
-        case 'length':
-          length = item.length
-
-          if (typeof(length) === 'object') {
-            if (length.max && value.length > length.max) {
-              item.err = true
-              item.msg =  messages[field].length.max
-              show_error(item, field)
-              return
-            } else if (length.min && value.length < length.min) {
-              item.err = true
-              item.msg =  messages[field].length.min
-              show_error(item, field)
-              return
-            }
-          } else if (value.length !== length) {
-            handle_error(field, prop)
-            return
-          };
-          break;
-        case 'type':
-          if (item.type === Number && !Number(value)) {
-            handle_error(field, prop)
-            return
-          }
-          break;
-        case 'enum':
-          if (!~item.enum.indexOf(value)) {
-            handle_error(field, prop)
-            return
-          }
-          break;
-      }
-    }
-  }
-
-  if (!all && item.task) {
-    item.task.handle(field, value, function (err) {
-      if (err) {
-        item.err = true
-        item.msg = err
-        show_error(item, field)
-      };
-    })
-  }
-}
-
-Validator.prototype.check = function() {
-  var item, value, i
-  var index = 0
-  var self = this
-  var schema = this.schema
-  var field, fields = this.fields
-  var show_error = this.show_error.bind(this)
-
-  for (i = 0; i < fields.length; i++) {
-    field = fields[i]
-    this.check_one(field, true)
-  }
-
-  var tasks = []
-
-  for (i = 0; i < fields.length; i++) {
-    field = fields[i]
-    item = schema[field]
-
-    if (!item.err && item.task) {
-      tasks.push(item.task)
-    };
   };
 
-  function done(err, field) {
-    var error = {}
-    var flag = false
-    var item = schema[field]
+  ['set', 'reset'].forEach(function (k) {
+    if (!path.message) {
+      path.message = {};
+    }
 
-    index++
+    path.message[k] = function (cb) {
+      item._msg = item._msg || {};
+      item._msg[k] = cb;
 
-    if (err) {
-      item.err = true
-      item.msg = err
-      show_error(item, field)
+      return path.message;
     };
+  });
 
-    if (index === tasks.length || tasks.length === 0) {
-      for (i = 0; i < fields.length; i++) {
-        field = fields[i]
-        item = schema[field]
+  return path;
+};
 
-        if (item.err) {
-          error[field] = item.msg
+Validator.prototype.show_error = function (item, field) {
+  item.err && item._msg ? item._msg.set(true) : this._messages.set(true, field);
+};
 
-          if (!flag) {
-            flag = true
-          }
-        }
-      };
+Validator.prototype.handle_error = function (field, type) {
+  var item = this.schema[field];
 
-      if (self._get_errors) {
-        self._get_errors(error)
-      }
+  item.err = this._messages.opts[field][type];
+  this.show_error(item, field);
+};
 
-      !flag && self._submit()
-    };
+Validator.prototype.check_one = function (field, all) {
+  var item = this.schema[field];
+  var show_error = this.show_error.bind(this);
+
+  this.reset_one(item, field);
+
+  item.get ? item.value = item.get()
+  : this._get ? item.value = this._get(field)
+  : item.value = document.getElementById(field).value;
+
+  item.value = item.value || '';
+
+  var map = {
+    required: function (v) {
+      return v === '';
+    },
+    length: function (v, cond) {
+      return v.length !== cond;
+    },
+    max_length: function (v, cond) {
+      return v.length > cond;
+    },
+    min_length: function (v, cond) {
+      return v.length < cond;
+    },
+    type: function (v, cond) {
+      return (cond === Number && isNaN((+v)))
+        || (cond !== Number && v.constructor !== cond);
+    },
+    enum: function (v, cond) {
+      return !~cond.indexOf(v);
+    }
+  };
+
+  for (var i = 0; i < this.props.length; i++) {
+    var prop = this.props[i];
+    if (item[prop] && map[prop](item.value, item[prop])) {
+      return this.handle_error(field, prop);
+    }
   }
 
-    if (tasks.length === 0) {
-      return done()
-    };
+  if (!all && item.cb) {
+    item.cb(function (err) {
+      if (err) {
+        item.err = err;
+        show_error(item, field);
+      }
+    });
+  }
+};
 
-    for (i = 0; i < tasks.length; i++) {
-      field = tasks[i].field
-      value = schema[field].value
-      tasks[i].handle(field, value, done)
-    };
-}
+Validator.prototype.check = function() {
+  var count = 0;
+  var tasks = [];
+  var flag = true;
+  var self = this;
+  var show_error = this.show_error.bind(this);
+
+  this.fields.forEach(function (field) {
+    var item = self.schema[field];
+
+    self.check_one(field, true);
+
+    if (!item.err && item.cb) {
+      tasks.push({ cb: item.cb, field: field, value: item.value });
+    }
+  });
+
+  function done(err) {
+    if (err) {
+      var item = self.schema[this.field];
+      item.err = err;
+      show_error(item, this.field);
+    }
+
+    count++;
+
+    if (tasks.length === 0 || tasks.length === count) {
+      var errors = {};
+
+      self.fields.forEach(function (field) {
+        var item = self.schema[field];
+
+        if (item.err) {
+          flag = false;
+          errors[field] = item.err;
+        }
+      });
+
+      self._get_errors && self._get_errors(errors);
+      flag && self._submit();
+    }
+  }
+
+  tasks.forEach(function (task) {
+    task.cb(done.bind(task));
+  });
+
+  tasks.length === 0 && done();
+};
