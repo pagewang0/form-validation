@@ -1,13 +1,29 @@
 'use strict';
 function Validator (schema) {
+  this._messages = {};
   this.schema = schema;
   this.fields = Object.keys(schema);
-  this.props = ['required', 'length', 'type', 'enum', 'min_length', 'max_length'];
-
   this.transform(this.schema);
 
-  ['submit', 'get_errors', 'get'].forEach(function (v) {
-    Validator.prototype[v] = new Function('fn', 'this._' + v + ' = fn');
+  this.map = {
+    required: 'return v === ""',
+    length: 'return v.length !== cond',
+    max_length: 'return v.length > cond',
+    min_length: 'return v.length < cond',
+    type: 'return (cond === Number && isNaN((+v))) || (cond !== Number && v.constructor !== cond)',
+    enum: 'return !~cond.indexOf(v)',
+    equal: 'return typeof cond === "function" ? v !== cond() : v !== document.getElementById(cond).value',
+    regex: 'return typeof cond === "function" ? !cond(v) : !cond.test(v)'
+  };
+
+  this.props = Object.keys(this.map);
+
+  for (var k in this.map) {
+    this.map[k] = new Function('v', 'cond', this.map[k]);
+  }
+
+  ['submit', 'get_errors'].forEach(function (v) {
+    Validator.prototype[v] = new Function('cb', 'this._' + v + ' = cb');
   });
 }
 
@@ -27,23 +43,21 @@ Validator.prototype.transform = function (opts) {
 };
 
 Validator.prototype.messages = function (opts) {
-  var o = {};
   var self = this;
 
-  if (!this._messages) {
-    this._messages = {
-      opts: opts
-    };
+  this._messages.opts = opts;
+  this.transform(this._messages.opts);
 
-    this.transform(this._messages.opts);
-  }
-
-  ['set', 'reset'].forEach(function (k) {
-    o[k] = function (cb) {
-      self._messages[k] = cb;
+  var o = {
+    set: function (cb) {
+      self._messages.set = cb;
       return this;
-    };
-  });
+    },
+    reset: function (cb) {
+      self._messages.reset = cb;
+      return this;
+    }
+  };
 
   return o;
 };
@@ -51,7 +65,7 @@ Validator.prototype.messages = function (opts) {
 Validator.prototype.reset_one = function (item, field) {
   if (item.err) {
     item.err = null;
-    item._msg ? item._msg.reset() : this._messages.reset(field);
+    item.msg ? item.msg.reset() : this._messages.reset(field);
   }
 };
 
@@ -60,30 +74,31 @@ Validator.prototype.path = function (field) {
   var path = {
     get: function (cb) {
       item.get = cb;
+      return this;
     },
     validate: function (cb) {
       item.cb = cb;
+      return this;
+    },
+    message: {
+      set: function (cb) {
+        item.msg = item.msg || {};
+        item.msg.set = cb;
+        return this;
+      },
+      reset: function (cb) {
+        item.msg = item.msg || {};
+        item.msg.reset = cb;
+        return this;
+      }
     }
   };
-
-  ['set', 'reset'].forEach(function (k) {
-    if (!path.message) {
-      path.message = {};
-    }
-
-    path.message[k] = function (cb) {
-      item._msg = item._msg || {};
-      item._msg[k] = cb;
-
-      return this;
-    };
-  });
 
   return path;
 };
 
 Validator.prototype.show_error = function (item, field) {
-  item.err && item._msg ? item._msg.set(true) : this._messages.set(true, field);
+  item.err && item.msg ? item.msg.set(item.err) : this._messages.set(item.err, field);
 };
 
 Validator.prototype.handle_error = function (field, type) {
@@ -100,36 +115,11 @@ Validator.prototype.check_one = function (field, all) {
   this.reset_one(item, field);
 
   item.get ? item.value = item.get()
-  : this._get ? item.value = this._get(field)
   : item.value = document.getElementById(field).value;
-
-  item.value = item.value || '';
-
-  var map = {
-    required: function (v) {
-      return v === '';
-    },
-    length: function (v, cond) {
-      return v.length !== cond;
-    },
-    max_length: function (v, cond) {
-      return v.length > cond;
-    },
-    min_length: function (v, cond) {
-      return v.length < cond;
-    },
-    type: function (v, cond) {
-      return (cond === Number && isNaN((+v)))
-        || (cond !== Number && v.constructor !== cond);
-    },
-    enum: function (v, cond) {
-      return !~cond.indexOf(v);
-    }
-  };
 
   for (var i = 0; i < this.props.length; i++) {
     var prop = this.props[i];
-    if (item[prop] && map[prop](item.value, item[prop])) {
+    if (item[prop] && this.map[prop](item.value, item[prop])) {
       return this.handle_error(field, prop);
     }
   }
@@ -153,7 +143,6 @@ Validator.prototype.check = function() {
 
   this.fields.forEach(function (field) {
     var item = self.schema[field];
-
     self.check_one(field, true);
 
     if (!item.err && item.cb) {
