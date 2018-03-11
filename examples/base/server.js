@@ -1,22 +1,10 @@
 var express = require('express')
 var fs = require('fs')
+var path = require('path')
 
-var app = express()
+var app = module.exports = express()
 
-app.use(express.static('../..'))
-
-// function create_user_before (req, res, next) {
-//     var user = new User()
-
-//     user.validation(err => {
-//         if (err) {
-//             res.send(err)
-//             return
-//         };
-
-//         next()
-//     })
-// }
+app.use(express.static(path.join(__dirname, '../..')))
 
 app.post('/user', (req, res) => {
     res.sendStatus(201)
@@ -24,7 +12,7 @@ app.post('/user', (req, res) => {
 
 app.get('/', (req, res) => {
     res.type('text/html; charset=utf-8')
-    res.send(fs.readFileSync('index.html'))
+    res.send(fs.readFileSync('examples/base/index.html'))
 })
 
 app.post('/', (req, res) => {

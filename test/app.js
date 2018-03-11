@@ -1,3 +1,5 @@
+var app = require('../examples/base/server');
+
 function clear(elem) {
   elem.getAttribute('value').then(function (text) {
     var len = text.length;
